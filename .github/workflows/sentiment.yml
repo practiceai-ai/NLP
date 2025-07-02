@@ -24,7 +24,7 @@ jobs:
 
       - name: Run sentiment analysis
         run: |
-          python -c "
+          python - <<EOF
 import sys
 from textblob import TextBlob
 sentence = '${{ github.event.inputs.sentence }}'
@@ -40,4 +40,4 @@ else:
 print(f'Sentence: {sentence}')
 print(f'Sentiment: {sentiment}')
 print(f'Polarity: {polarity:.2f}, Subjectivity: {subjectivity:.2f}')
-"
+EOF
