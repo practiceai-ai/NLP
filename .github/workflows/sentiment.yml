@@ -23,21 +23,26 @@ jobs:
           python -m textblob.download_corpora
 
       - name: Run sentiment analysis
+        env:
+          SENTENCE: ${{ github.event.inputs.sentence }}
+        shell: python
         run: |
-          python - <<EOF
-import sys
-from textblob import TextBlob
-sentence = '${{ github.event.inputs.sentence }}'
-blob = TextBlob(sentence)
-polarity = blob.sentiment.polarity
-subjectivity = blob.sentiment.subjectivity
-if polarity > 0:
-    sentiment = 'Positive'
-elif polarity < 0:
-    sentiment = 'Negative'
-else:
-    sentiment = 'Neutral'
-print(f'Sentence: {sentence}')
-print(f'Sentiment: {sentiment}')
-print(f'Polarity: {polarity:.2f}, Subjectivity: {subjectivity:.2f}')
-EOF
+          import os
+          from textblob import TextBlob
+
+          sentence = os.getenv('SENTENCE')
+          blob = TextBlob(sentence)
+
+          polarity = blob.sentiment.polarity
+          subjectivity = blob.sentiment.subjectivity
+
+          if polarity > 0:
+              sentiment = 'Positive'
+          elif polarity < 0:
+              sentiment = 'Negative'
+          else:
+              sentiment = 'Neutral'
+
+          print(f'Sentence: {sentence}')
+          print(f'Sentiment: {sentiment}')
+          print(f'Polarity: {polarity:.2f}, Subjectivity: {subjectivity:.2f}')
